@@ -24,7 +24,7 @@ public class SwaggerConfiguration {
                 .name("traceId")
                 .modelRef(new ModelRef("string"))
                 .parameterType("header")
-                .required(true)
+                .required(false)
                 .build();
 
         return new Docket(DocumentationType.SWAGGER_2)
