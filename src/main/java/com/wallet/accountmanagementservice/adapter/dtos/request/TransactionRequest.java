@@ -8,6 +8,7 @@ public record TransactionRequest(
         String destinationAccountNumber,
         String originAccountNumber,
         BigDecimal value,
-        TransactionType type
+        TransactionType type,
+        String barcode
 ) {
 }

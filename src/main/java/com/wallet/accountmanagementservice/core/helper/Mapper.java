@@ -55,6 +55,7 @@ public class Mapper {
         return new TransactionDomain(transactionRequest.destinationAccountNumber(),
                 transactionRequest.originAccountNumber(),
                 transactionRequest.value(),
-                transactionRequest.type());
+                transactionRequest.type(),
+                transactionRequest.barcode());
     }
 }

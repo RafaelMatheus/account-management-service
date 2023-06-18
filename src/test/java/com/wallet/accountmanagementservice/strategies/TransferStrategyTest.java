@@ -2,6 +2,8 @@ package com.wallet.accountmanagementservice.strategies;
 
 import com.wallet.accountmanagementservice.adapter.config.PropertiesConfiguration;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
+import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
+import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.exception.IinsufficientBalanceException;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import com.wallet.accountmanagementservice.core.port.impl.AccountPortRepository;
@@ -31,7 +33,7 @@ public class TransferStrategyTest {
     private RabbitMqPort rabbitMqPort;
 
     @Test
-    void shouldCalculateDepositAndSendToRabbitMq() {
+    void shouldCalculateTrasnferAndSendToRabbitMq() {
         var domain = getAccountDomain();
         var domain2 = getAccountDomain2();
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER)).thenReturn(domain);
@@ -39,7 +41,9 @@ public class TransferStrategyTest {
         doNothing().when(rabbitMqPort).send(any(), any(), any());
         ReflectionTestUtils.setField(transferStrategy, "propertiesConfiguration", getPropertiesConfiguration());
 
-        transferStrategy.process(ACCOUNT_NUMBER, ACCOUNT_NUMBER2, BigDecimal.TEN);
+        var transactionDomain = new TransactionDomain(ACCOUNT_NUMBER, ACCOUNT_NUMBER2, BigDecimal.TEN, TransactionType.TRANSFER, null);
+
+        transferStrategy.process(transactionDomain);
 
         ArgumentCaptor<AccountDomain> accountDomainArgumentCaptor = ArgumentCaptor.forClass(AccountDomain.class);
 
@@ -56,13 +60,15 @@ public class TransferStrategyTest {
 
     @Test
     void shouldReturnErrorWhenOriginAccountHasAnyLimit(){
+        var transactionDomain = new TransactionDomain(ACCOUNT_NUMBER, ACCOUNT_NUMBER2, BigDecimal.TEN, TransactionType.TRANSFER, null);
+
         var domain = getAccountDomain();
         var domain2 = getAccountDomain2();
         domain2.setBalance(BigDecimal.ZERO);
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER)).thenReturn(domain);
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain2);
 
-        assertThrows(IinsufficientBalanceException.class, ()-> transferStrategy.process(ACCOUNT_NUMBER, ACCOUNT_NUMBER2, BigDecimal.TEN));
+        assertThrows(IinsufficientBalanceException.class, ()-> transferStrategy.process(transactionDomain));
     }
 
 }

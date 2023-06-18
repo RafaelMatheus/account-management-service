@@ -2,6 +2,8 @@ package com.wallet.accountmanagementservice.core.strategy;
 
 import com.wallet.accountmanagementservice.adapter.config.PropertiesConfiguration;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
+import com.wallet.accountmanagementservice.core.domain.PaymentRabbitMqDomain;
+import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionRabbitMqDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.exception.IinsufficientBalanceException;
@@ -16,29 +18,30 @@ public class PaymentStrategy extends AbstractStrategy {
     }
 
     @Override
-    public AccountDomain process(String destinationAccountNumber, String originAccountNumber, BigDecimal value) {
-        var account = port.findByAccountNumber(originAccountNumber);
+    public AccountDomain process(TransactionDomain transactionDomain) {
+        var account = port.findByAccountNumber(transactionDomain.originAccountNumber());
 
-        if (!hasSufficientBalance(account, value)) {
+        if (!hasSufficientBalance(account, transactionDomain.value())) {
             throw new IinsufficientBalanceException();
         }
 
-        account.setBalance(account.getBalance().min(value));
+        account.setBalance(account.getBalance().min(transactionDomain.value()));
 
         var toResponse = port.save(account);
-        var message = toTransactionRabbitDomainWithdraw(account, value);
+        var message = toPaymentRabbitDomainWithdraw(transactionDomain, account.getHolderTaxId());
 
-        sendToQueueTransaction(message);
+        sendToQueuePayment(message);
         return toResponse;
 
     }
 
     @Override
     public TransactionType getType() {
-        return TransactionType.WITHDRAW;
+        return TransactionType.PAYMENT;
     }
 
-    private TransactionRabbitMqDomain toTransactionRabbitDomainWithdraw(AccountDomain originAccount, BigDecimal value) {
-        return new TransactionRabbitMqDomain(TransactionType.WITHDRAW, originAccount.getAccountNumber(), null, value);
+    private PaymentRabbitMqDomain toPaymentRabbitDomainWithdraw(TransactionDomain transactionDomain, String taxId) {
+        return new PaymentRabbitMqDomain(TransactionType.PAYMENT, transactionDomain.originAccountNumber(),
+                transactionDomain.value(), transactionDomain.barcode(), taxId);
     }
 }

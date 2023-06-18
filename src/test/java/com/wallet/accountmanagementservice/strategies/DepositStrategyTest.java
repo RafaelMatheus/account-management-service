@@ -1,6 +1,8 @@
 package com.wallet.accountmanagementservice.strategies;
 
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
+import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
+import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import com.wallet.accountmanagementservice.core.port.impl.AccountPortRepository;
 import com.wallet.accountmanagementservice.core.strategy.DepositStrategy;
@@ -36,7 +38,8 @@ public class DepositStrategyTest {
         doNothing().when(rabbitMqPort).send(any(), any(), any());
         ReflectionTestUtils.setField(depositStrategy, "propertiesConfiguration", getPropertiesConfiguration());
 
-        depositStrategy.process(ACCOUNT_NUMBER, null, BigDecimal.TEN);
+        var transactionDomain = new TransactionDomain(ACCOUNT_NUMBER, null, BigDecimal.TEN, TransactionType.DEPOSIT, null);
+        depositStrategy.process(transactionDomain);
 
         ArgumentCaptor<AccountDomain> accountDomainArgumentCaptor = ArgumentCaptor.forClass(AccountDomain.class);
 
