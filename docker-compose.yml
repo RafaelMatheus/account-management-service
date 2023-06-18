@@ -30,6 +30,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8080:8080
+    environment:
+      - RABBIT_HOST=rabbitmq
+      - DB_URI=mongodb
     depends_on:
       - mongodb
       - rabbitmq
@@ -38,7 +41,10 @@ services:
     image: transaction-management
     container_name: transaction-management
     ports:
-      - 8081:8081
+      - 8082:8081
+    environment:
+      - RABBIT_HOST=rabbitmq
+      - DB_URI=mongodb
     depends_on:
       - mongodb
       - rabbitmq
@@ -47,7 +53,10 @@ services:
     image: payment-management
     container_name: payment-management
     ports:
-      - 8082:8082
+      - 8083:8083
+    environment:
+      - RABBIT_HOST=rabbitmq
+      - DB_URI=mongodb
     depends_on:
       - mongodb
       - rabbitmq
