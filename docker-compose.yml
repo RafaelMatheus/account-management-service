@@ -24,6 +24,25 @@ services:
       - 27017:27017
     command: mongod
 
+  account-management:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - account-management
+
 volumes:
   MONGO_DATA:
   SQL_DATA:

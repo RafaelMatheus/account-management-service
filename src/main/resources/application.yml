@@ -23,3 +23,11 @@ transaction:
     dead-letter-routing-key: dead-letter-routing
     dead-letter-exchange: transaction-dead-letter-exchange
     dead-letter-queue-name: transaction-dead-letter-queue
+payment:
+  rabbit:
+    queue-name: payment-queue
+    exchange-name: payment-exchange
+    routing-key: payment-routing
+    dead-letter-routing-key: payment-dead-letter-routing
+    dead-letter-exchange: payment-dead-letter-exchange
+    dead-letter-queue-name: payment-dead-letter-queue

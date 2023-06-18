@@ -47,4 +47,14 @@ public abstract class AbstractStrategy implements ProcessTransactionStrategy {
             throw new RuntimeException(e);
         }
     }
+
+    protected void sendToQueuePayment(TransactionRabbitMqDomain message) {
+        try {
+            rabbitMqPort.send(renderMensagemFila(message),
+                    propertiesConfiguration.getTransaction().getRabbit().getRoutingKey(),
+                    propertiesConfiguration.getTransaction().getRabbit().getExchangeName());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
