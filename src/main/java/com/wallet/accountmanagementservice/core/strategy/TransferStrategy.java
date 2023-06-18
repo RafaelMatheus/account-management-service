@@ -2,6 +2,7 @@ package com.wallet.accountmanagementservice.core.strategy;
 
 import com.wallet.accountmanagementservice.adapter.config.PropertiesConfiguration;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
+import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionRabbitMqDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.exception.IinsufficientBalanceException;
@@ -16,17 +17,17 @@ public class TransferStrategy extends AbstractStrategy {
     }
 
     @Override
-    public AccountDomain process(String destinationAccountNumber, String originAccountNumber, BigDecimal value) {
-        var originAccount = port.findByAccountNumber(originAccountNumber);
-        var destinationAccount = port.findByAccountNumber(destinationAccountNumber);
+    public AccountDomain process(TransactionDomain transactionDomain) {
+        var originAccount = port.findByAccountNumber(transactionDomain.originAccountNumber());
+        var destinationAccount = port.findByAccountNumber(transactionDomain.destinationAccountNumber());
 
-        if (!hasSufficientBalance(originAccount, value)) {
+        if (!hasSufficientBalance(originAccount, transactionDomain.value())) {
             throw new IinsufficientBalanceException();
         }
 
-        destinationAccount.setBalance(destinationAccount.getBalance().add(value));
+        destinationAccount.setBalance(destinationAccount.getBalance().add(transactionDomain.value()));
 
-        var message = toTransactionRabbitDomainDeposit(originAccount, destinationAccount, value);
+        var message = toTransactionRabbitDomainDeposit(originAccount, destinationAccount, transactionDomain.value());
         sendToQueueTransaction(message);
 
         return port.save(destinationAccount);

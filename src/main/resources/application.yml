@@ -1,13 +1,13 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017
+      uri: ${DB_URI:mongodb://localhost:27017}
       database: account-management
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher
   rabbitmq:
-    host: localhost
+    host: ${RABBIT_HOST:localhost}
     port: 5672
     username: guest
     password: guest

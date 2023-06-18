@@ -2,6 +2,7 @@ package com.wallet.accountmanagementservice.core.strategy;
 
 import com.wallet.accountmanagementservice.adapter.config.PropertiesConfiguration;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
+import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionRabbitMqDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.port.AccountPort;
@@ -16,11 +17,11 @@ public class DepositStrategy extends AbstractStrategy {
     }
 
     @Override
-    public AccountDomain process(String destinationAccountNumber, String originAccountNumber, BigDecimal value) {
-        var account = port.findByAccountNumber(destinationAccountNumber);
+    public AccountDomain process(TransactionDomain transactionDomain) {
+        var account = port.findByAccountNumber(transactionDomain.originAccountNumber());
 
-        account.setBalance(account.getBalance().add(value));
-        var message = toTransactionRabbitDomainDeposit(account, value);
+        account.setBalance(account.getBalance().add(transactionDomain.value()));
+        var message = toTransactionRabbitDomainDeposit(account, transactionDomain.value());
         sendToQueueTransaction(message);
         return port.save(account);
     }

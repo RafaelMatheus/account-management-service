@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitConfig {
+public class RabbitTransactionConfig {
     private final PropertiesConfiguration env;
 
-    public RabbitConfig(PropertiesConfiguration env) {
+    public RabbitTransactionConfig(PropertiesConfiguration env) {
         this.env = env;
     }
 

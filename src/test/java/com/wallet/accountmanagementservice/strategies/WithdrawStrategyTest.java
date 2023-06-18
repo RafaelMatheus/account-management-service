@@ -1,6 +1,8 @@
 package com.wallet.accountmanagementservice.strategies;
 
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
+import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
+import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.exception.IinsufficientBalanceException;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import com.wallet.accountmanagementservice.core.port.impl.AccountPortRepository;
@@ -35,8 +37,9 @@ public class WithdrawStrategyTest {
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain);
         doNothing().when(rabbitMqPort).send(any(), any(), any());
         ReflectionTestUtils.setField(withdrawStrategy, "propertiesConfiguration", getPropertiesConfiguration());
+        var transactionDomain = new TransactionDomain(null, ACCOUNT_NUMBER2, BigDecimal.TEN, TransactionType.WITHDRAW, null);
 
-        withdrawStrategy.process(null, ACCOUNT_NUMBER2, BigDecimal.TEN);
+        withdrawStrategy.process(transactionDomain);
 
         ArgumentCaptor<AccountDomain> accountDomainArgumentCaptor = ArgumentCaptor.forClass(AccountDomain.class);
 
@@ -53,11 +56,13 @@ public class WithdrawStrategyTest {
 
     @Test
     void shouldReturnErrorWhenOriginAccountHasAnyLimit() {
+        var transactionDomain = new TransactionDomain(null, ACCOUNT_NUMBER2, BigDecimal.TEN, TransactionType.WITHDRAW, null);
+
         var domain = getAccountDomain2();
         domain.setBalance(BigDecimal.ZERO);
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain);
 
-        assertThrows(IinsufficientBalanceException.class, () -> withdrawStrategy.process(null, ACCOUNT_NUMBER2, BigDecimal.TEN));
+        assertThrows(IinsufficientBalanceException.class, () -> withdrawStrategy.process(transactionDomain));
     }
 
 }

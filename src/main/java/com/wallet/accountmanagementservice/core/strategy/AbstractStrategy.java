@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wallet.accountmanagementservice.adapter.config.PropertiesConfiguration;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
+import com.wallet.accountmanagementservice.core.domain.PaymentRabbitMqDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionRabbitMqDomain;
-import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.port.AccountPort;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import org.springframework.amqp.core.Message;
@@ -48,11 +48,11 @@ public abstract class AbstractStrategy implements ProcessTransactionStrategy {
         }
     }
 
-    protected void sendToQueuePayment(TransactionRabbitMqDomain message) {
+    protected void sendToQueuePayment(PaymentRabbitMqDomain message) {
         try {
             rabbitMqPort.send(renderMensagemFila(message),
-                    propertiesConfiguration.getTransaction().getRabbit().getRoutingKey(),
-                    propertiesConfiguration.getTransaction().getRabbit().getExchangeName());
+                    propertiesConfiguration.getPayment().getRabbit().getRoutingKey(),
+                    propertiesConfiguration.getPayment().getRabbit().getExchangeName());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

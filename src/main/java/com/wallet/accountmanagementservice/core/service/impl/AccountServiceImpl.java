@@ -32,8 +32,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDomain executeAccountTransaction(TransactionDomain toTransactionDomain) {
-        return factory.get(toTransactionDomain.type()).process(toTransactionDomain.destinationAccountNumber(),
-                toTransactionDomain.originAccountNumber(),
-                toTransactionDomain.value());
+        return factory.get(toTransactionDomain.type()).process(toTransactionDomain);
     }
 }

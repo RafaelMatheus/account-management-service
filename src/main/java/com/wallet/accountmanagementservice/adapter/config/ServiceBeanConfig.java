@@ -41,6 +41,7 @@ public class ServiceBeanConfig {
         var depositStrategy = new DepositStrategy(port, rabbitMqPort, propertiesConfiguration);
         var withdrawStrategy = new WithdrawStrategy(port, rabbitMqPort, propertiesConfiguration);
         var transferStrategy = new TransferStrategy(port, rabbitMqPort, propertiesConfiguration);
-        return Set.of(depositStrategy, withdrawStrategy, transferStrategy);
+        var paymentStrategy = new PaymentStrategy(port, rabbitMqPort, propertiesConfiguration);
+        return Set.of(depositStrategy, withdrawStrategy, transferStrategy, paymentStrategy);
     }
 }
