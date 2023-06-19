@@ -5,7 +5,7 @@ import com.wallet.accountmanagementservice.core.domain.AccountDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionRabbitMqDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
-import com.wallet.accountmanagementservice.core.exception.IinsufficientBalanceException;
+import com.wallet.accountmanagementservice.core.exception.InsufficientBalanceException;
 import com.wallet.accountmanagementservice.core.port.AccountPort;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 
@@ -22,7 +22,7 @@ public class WithdrawStrategy extends AbstractStrategy {
         var account = port.findByAccountNumber(transactionDomain.originAccountNumber());
 
         if (!hasSufficientBalance(account, transactionDomain.value())) {
-            throw new IinsufficientBalanceException();
+            throw new InsufficientBalanceException();
         }
 
         account.setBalance(account.getBalance().subtract(transactionDomain.value()));

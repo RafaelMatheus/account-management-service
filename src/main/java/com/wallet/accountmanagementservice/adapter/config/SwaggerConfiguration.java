@@ -34,7 +34,7 @@ public class SwaggerConfiguration {
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(AccountController.class.getPackageName()))
                 .build()
-                .pathMapping("/account");
+                .pathMapping("/");
     }
 
     private ApiInfo metaData() {

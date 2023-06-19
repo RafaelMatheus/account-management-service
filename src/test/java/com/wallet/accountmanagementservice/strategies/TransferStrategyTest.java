@@ -3,7 +3,7 @@ package com.wallet.accountmanagementservice.strategies;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
-import com.wallet.accountmanagementservice.core.exception.IinsufficientBalanceException;
+import com.wallet.accountmanagementservice.core.exception.InsufficientBalanceException;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import com.wallet.accountmanagementservice.core.port.impl.AccountPortRepository;
 import com.wallet.accountmanagementservice.core.strategy.TransferStrategy;
@@ -46,7 +46,7 @@ class TransferStrategyTest {
 
         ArgumentCaptor<AccountDomain> accountDomainArgumentCaptor = ArgumentCaptor.forClass(AccountDomain.class);
 
-        verify(accountPortRepository).save(accountDomainArgumentCaptor.capture());
+        verify(accountPortRepository, times(2)).save(accountDomainArgumentCaptor.capture());
 
         var valueFromCapture = accountDomainArgumentCaptor.getValue();
 
@@ -67,7 +67,7 @@ class TransferStrategyTest {
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER)).thenReturn(domain);
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain2);
 
-        assertThrows(IinsufficientBalanceException.class, () -> transferStrategy.process(transactionDomain));
+        assertThrows(InsufficientBalanceException.class, () -> transferStrategy.process(transactionDomain));
     }
 
 }

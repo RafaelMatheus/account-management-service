@@ -3,7 +3,7 @@ package com.wallet.accountmanagementservice.strategies;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
-import com.wallet.accountmanagementservice.core.exception.IinsufficientBalanceException;
+import com.wallet.accountmanagementservice.core.exception.InsufficientBalanceException;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import com.wallet.accountmanagementservice.core.port.impl.AccountPortRepository;
 import com.wallet.accountmanagementservice.core.strategy.WithdrawStrategy;
@@ -62,7 +62,7 @@ class WithdrawStrategyTest {
         domain.setBalance(BigDecimal.ZERO);
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain);
 
-        assertThrows(IinsufficientBalanceException.class, () -> withdrawStrategy.process(transactionDomain));
+        assertThrows(InsufficientBalanceException.class, () -> withdrawStrategy.process(transactionDomain));
     }
 
 }
