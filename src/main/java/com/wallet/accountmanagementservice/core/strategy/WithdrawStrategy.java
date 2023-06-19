@@ -25,7 +25,7 @@ public class WithdrawStrategy extends AbstractStrategy {
             throw new IinsufficientBalanceException();
         }
 
-        account.setBalance(account.getBalance().min(transactionDomain.value()));
+        account.setBalance(account.getBalance().subtract(transactionDomain.value()));
 
         var toResponse = port.save(account);
         var message = toTransactionRabbitDomainWithdraw(account, transactionDomain.value());

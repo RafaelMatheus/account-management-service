@@ -25,11 +25,13 @@ public class TransferStrategy extends AbstractStrategy {
             throw new IinsufficientBalanceException();
         }
 
+        originAccount.setBalance(originAccount.getBalance().subtract(transactionDomain.value()));
         destinationAccount.setBalance(destinationAccount.getBalance().add(transactionDomain.value()));
 
         var message = toTransactionRabbitDomainDeposit(originAccount, destinationAccount, transactionDomain.value());
         sendToQueueTransaction(message);
 
+        port.save(originAccount);
         return port.save(destinationAccount);
     }
 
