@@ -6,6 +6,7 @@ import com.wallet.accountmanagementservice.adapter.config.PropertiesConfiguratio
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
 import com.wallet.accountmanagementservice.core.domain.PaymentRabbitMqDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionRabbitMqDomain;
+import com.wallet.accountmanagementservice.core.exception.AccountException;
 import com.wallet.accountmanagementservice.core.port.AccountPort;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import org.springframework.amqp.core.Message;
@@ -44,7 +45,7 @@ public abstract class AbstractStrategy implements ProcessTransactionStrategy {
                     propertiesConfiguration.getTransaction().getRabbit().getRoutingKey(),
                     propertiesConfiguration.getTransaction().getRabbit().getExchangeName());
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new AccountException(e);
         }
     }
 
@@ -54,7 +55,7 @@ public abstract class AbstractStrategy implements ProcessTransactionStrategy {
                     propertiesConfiguration.getPayment().getRabbit().getRoutingKey(),
                     propertiesConfiguration.getPayment().getRabbit().getExchangeName());
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new AccountException(e);
         }
     }
 }

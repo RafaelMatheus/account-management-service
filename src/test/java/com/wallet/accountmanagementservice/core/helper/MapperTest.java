@@ -6,7 +6,7 @@ import static com.wallet.accountmanagementservice.base.BaseTestFactory.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MapperTest {
+class MapperTest {
     @Test
     void shouldMapperFromAccountDomainToAccountEntity() {
         var accountDomain = getAccountDomain();

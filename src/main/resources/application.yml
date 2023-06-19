@@ -12,6 +12,10 @@ spring:
     username: guest
     password: guest
     virtual-host: b2b
+
+  mongodb:
+    embedded:
+      version: 4.0.2
 server:
   port: 8080
 
@@ -31,3 +35,4 @@ payment:
     dead-letter-routing-key: payment-dead-letter-routing
     dead-letter-exchange: payment-dead-letter-exchange
     dead-letter-queue-name: payment-dead-letter-queue
+

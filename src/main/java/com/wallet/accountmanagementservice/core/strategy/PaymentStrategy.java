@@ -4,13 +4,10 @@ import com.wallet.accountmanagementservice.adapter.config.PropertiesConfiguratio
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
 import com.wallet.accountmanagementservice.core.domain.PaymentRabbitMqDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
-import com.wallet.accountmanagementservice.core.domain.TransactionRabbitMqDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.exception.IinsufficientBalanceException;
 import com.wallet.accountmanagementservice.core.port.AccountPort;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
-
-import java.math.BigDecimal;
 
 public class PaymentStrategy extends AbstractStrategy {
     public PaymentStrategy(AccountPort port, RabbitMqPort rabbitMqPort, PropertiesConfiguration propertiesConfiguration) {

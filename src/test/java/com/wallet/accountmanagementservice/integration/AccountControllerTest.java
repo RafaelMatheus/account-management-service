@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureDataMongo
-public class AccountControllerTest {
+class AccountControllerTest {
     private MockMvc mockMvc;
 
     @Autowired

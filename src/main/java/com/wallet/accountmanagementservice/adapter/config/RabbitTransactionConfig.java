@@ -41,7 +41,7 @@ public class RabbitTransactionConfig {
     }
 
     @Bean
-    public Binding DLQbinding() {
+    public Binding deadLetterBiding() {
         return BindingBuilder.bind(deadLetterQueue()).to(deadLetterExchange()).with(env.getTransaction().getRabbit().getDeadLetterRoutingKey());
     }
 

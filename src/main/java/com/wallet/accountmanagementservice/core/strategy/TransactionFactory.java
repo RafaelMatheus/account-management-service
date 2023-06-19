@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class TransactionFactory {
-    private Map<TransactionType, ProcessTransactionStrategy> strategies;
+    private final Map<TransactionType, ProcessTransactionStrategy> strategies;
 
     public TransactionFactory(Set<ProcessTransactionStrategy> processTransactionStrategies) {
         strategies = new HashMap<>();

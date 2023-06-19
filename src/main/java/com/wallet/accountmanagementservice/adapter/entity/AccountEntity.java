@@ -22,7 +22,7 @@ public class AccountEntity {
         this.creationDate = LocalDateTime.now();
     }
 
-    public AccountEntity(String id, String holderTaxId, String holderName, String phoneNumber, BigDecimal balance, String accountNumber, LocalDateTime creationDate, LocalDateTime updateDate) {
+    public AccountEntity(String id, String holderTaxId, String holderName, String phoneNumber, BigDecimal balance, String accountNumber, LocalDateTime creationDate) {
         this.id = id;
         this.holderTaxId = holderTaxId;
         this.holderName = holderName;
@@ -30,7 +30,6 @@ public class AccountEntity {
         this.balance = balance;
         this.accountNumber = accountNumber;
         this.creationDate = creationDate;
-        this.updateDate = updateDate;
     }
 
     public String getAccountNumber() {

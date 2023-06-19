@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class DepositStrategyTest {
+class DepositStrategyTest {
     @InjectMocks
     private DepositStrategy depositStrategy;
     @Mock
@@ -36,7 +36,7 @@ public class DepositStrategyTest {
         var domain = getAccountDomain();
         when(accountPortRepository.findByAccountNumber(any())).thenReturn(domain);
         doNothing().when(rabbitMqPort).send(any(), any(), any());
-        ReflectionTestUtils.setField(depositStrategy, "propertiesConfiguration", getPropertiesConfiguration());
+        ReflectionTestUtils.setField(depositStrategy, "propertiesConfiguration", getPropertiesTransactionConfiguration());
 
         var transactionDomain = new TransactionDomain(ACCOUNT_NUMBER, null, BigDecimal.TEN, TransactionType.DEPOSIT, null);
         depositStrategy.process(transactionDomain);

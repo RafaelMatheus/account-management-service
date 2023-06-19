@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class WithdrawStrategyTest {
+class WithdrawStrategyTest {
     @InjectMocks
     private WithdrawStrategy withdrawStrategy;
     @Mock
@@ -36,7 +36,7 @@ public class WithdrawStrategyTest {
         var domain = getAccountDomain2();
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain);
         doNothing().when(rabbitMqPort).send(any(), any(), any());
-        ReflectionTestUtils.setField(withdrawStrategy, "propertiesConfiguration", getPropertiesConfiguration());
+        ReflectionTestUtils.setField(withdrawStrategy, "propertiesConfiguration", getPropertiesTransactionConfiguration());
         var transactionDomain = new TransactionDomain(null, ACCOUNT_NUMBER2, BigDecimal.TEN, TransactionType.WITHDRAW, null);
 
         withdrawStrategy.process(transactionDomain);

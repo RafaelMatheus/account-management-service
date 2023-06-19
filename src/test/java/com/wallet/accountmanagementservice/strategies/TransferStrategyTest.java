@@ -1,6 +1,5 @@
 package com.wallet.accountmanagementservice.strategies;
 
-import com.wallet.accountmanagementservice.adapter.config.PropertiesConfiguration;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
@@ -24,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TransferStrategyTest {
+class TransferStrategyTest {
     @InjectMocks
     private TransferStrategy transferStrategy;
     @Mock
@@ -39,7 +38,7 @@ public class TransferStrategyTest {
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER)).thenReturn(domain);
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain2);
         doNothing().when(rabbitMqPort).send(any(), any(), any());
-        ReflectionTestUtils.setField(transferStrategy, "propertiesConfiguration", getPropertiesConfiguration());
+        ReflectionTestUtils.setField(transferStrategy, "propertiesConfiguration", getPropertiesTransactionConfiguration());
 
         var transactionDomain = new TransactionDomain(ACCOUNT_NUMBER, ACCOUNT_NUMBER2, BigDecimal.TEN, TransactionType.TRANSFER, null);
 
@@ -59,7 +58,7 @@ public class TransferStrategyTest {
     }
 
     @Test
-    void shouldReturnErrorWhenOriginAccountHasAnyLimit(){
+    void shouldReturnErrorWhenOriginAccountHasAnyLimit() {
         var transactionDomain = new TransactionDomain(ACCOUNT_NUMBER, ACCOUNT_NUMBER2, BigDecimal.TEN, TransactionType.TRANSFER, null);
 
         var domain = getAccountDomain();
@@ -68,7 +67,7 @@ public class TransferStrategyTest {
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER)).thenReturn(domain);
         when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain2);
 
-        assertThrows(IinsufficientBalanceException.class, ()-> transferStrategy.process(transactionDomain));
+        assertThrows(IinsufficientBalanceException.class, () -> transferStrategy.process(transactionDomain));
     }
 
 }
