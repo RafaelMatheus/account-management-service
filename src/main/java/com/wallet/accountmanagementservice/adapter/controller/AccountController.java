@@ -22,7 +22,7 @@ public class AccountController {
     }
 
     @GetMapping("/{accountNumber}")
-    public AccountResponse getAccountInformationByAccountNumber(String accountNumber) {
+    public AccountResponse getAccountInformationByAccountNumber(@PathVariable String accountNumber) {
         return Mapper.toResponse(accountService.getAccountInformation(accountNumber));
     }
 
