@@ -30,7 +30,7 @@ public class CustomExceptionResolver extends ResponseEntityExceptionHandler {
                 .map(fieldError -> new FieldErrorResponse(fieldError.getField(), fieldError.getDefaultMessage()))
                 .toList();
 
-        var errorResponse = new CustomErrorResponse(path, ex.getMessage(), HttpStatus.BAD_REQUEST, fieldErrorResponse);
+        var errorResponse = new CustomErrorResponse(path, "Validation error", HttpStatus.BAD_REQUEST, fieldErrorResponse);
 
         return ResponseEntity.badRequest().body(errorResponse);
     }

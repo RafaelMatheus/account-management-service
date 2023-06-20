@@ -22,12 +22,12 @@ public class AccountController {
     }
 
     @PostMapping
-    public AccountResponse generateAccount(@RequestBody AccountRequest request) {
+    public AccountResponse generateAccount(@RequestBody @Valid AccountRequest request) {
         return Mapper.toResponse(accountService.generateAccount(Mapper.toDomain(request)));
     }
 
-    @GetMapping("/{accountNumber}")
-    public AccountResponse getAccountInformationByAccountNumber(@PathVariable String accountNumber) {
+    @GetMapping
+    public AccountResponse getAccountInformationByAccountNumber(String accountNumber) {
         return Mapper.toResponse(accountService.getAccountInformation(accountNumber));
     }
 

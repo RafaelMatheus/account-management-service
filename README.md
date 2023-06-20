@@ -54,7 +54,7 @@ O Account Management Service possui uma documentação do Swagger que descreve o
 
 Para acessar a documentação do Swagger, siga as etapas abaixo:
 
-1. Inicie o serviço Account Management.
+1. Verifique se o docker-compose foi corretamente executado.
 2. Abra o navegador e vá para a URL: [http://localhost/account/swagger-ui.html](http://localhost/account/swagger-ui.html).
 
 Isso abrirá a interface do Swagger, onde você poderá explorar os endpoints, enviar solicitações e visualizar as respostas.
@@ -80,7 +80,7 @@ Antes de qualquer coisa é necessário criar uma nova conta, você utilizará at
 - Consultar informações da conta (guarde o número da conta criado anteriormente):
 
   ```bash
-  curl -X GET "http://localhost/account/api/accounts/{numeroDaContaRespondidoNaSolucitacaoAnterior}" -H "accept: */*"
+  curl -X GET "http://localhost/account/api/accounts?accountNumber={numeroDaContaRespondidoNaSolucitacaoAnterior}" -H "accept: */*"
   ```
 - Realizar deposito:
   ```bash
