@@ -6,6 +6,12 @@ O serviço Account Management é responsável por gerenciar as contas no context
 
 O Account Management Service é um componente central que oferece funcionalidades de contas de usuários dentro do sistema de carteira digital. 
 
+## Arquitetura
+
+O serviço Account Management é projetado como um microserviço independente e segue os princípios de arquitetura de microsserviços. Ele é desenvolvido usando tecnologias como Spring Boot, Java rabbitMq e Banco de Dados mongoDb para armazenar os dados das contas.
+
+![desenhoarquitetural](https://github.com/RafaelMatheus/account-management-service/assets/25590639/dfbb865b-3530-446b-b407-ecb7844490d1)
+
 ## Integrações
 
 O Account Management Service se integra com os seguintes serviços:
@@ -98,14 +104,5 @@ Antes de qualquer coisa é necessário criar uma nova conta, você utilizará at
     ```bash
     curl -X GET "http://localhost/transaction/api/transactions?accountNumber=d5fe117d-8fa9-49b8-80bd-fb7b509847b6&pageNumber=0&size=4" -H "accept: */*"
     ```
-
-## Arquitetura
-
-O serviço Account Management é projetado como um microserviço independente e segue os princípios de arquitetura de microsserviços. Ele é desenvolvido usando tecnologias como Spring Boot, Java rabbitMq e Banco de Dados mongoDb para armazenar os dados das contas.
-
-![desenhoarquitetural](https://github.com/RafaelMatheus/account-management-service/assets/25590639/dfbb865b-3530-446b-b407-ecb7844490d1)
-
-
-
 
 
