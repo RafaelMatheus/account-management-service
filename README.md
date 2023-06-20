@@ -10,7 +10,7 @@ O Account Management Service é um componente central que oferece funcionalidade
 
 O Account Management Service se integra com os seguintes serviços:
 
-- [Transaction Service](https://github.com/RafaelMatheus/payment-management-service): responsável pelo gerenciamento de transações financeiras.
+- [Transaction Service](https://github.com/RafaelMatheus/payment-management-service): responsável histórico transações financeiras.
 - [Payment Service](https://github.com/RafaelMatheus/payment-management-service): responsável pelo processamento de pagamentos e recebimentos.
 
 ## Requisitos do Sistema
@@ -35,6 +35,7 @@ Antes de iniciar o ambiente com o `docker-compose`, é necessário construir a i
 ```bash
 docker build -t account-management .
 ````
+Observação: Certifique-se de ter construido as imagens das dependências antes de executar o docker-compose, as descrições encontram-se em seus respectivos readme.md.
 
 ```bash
 docker-compose up -d
