@@ -6,6 +6,7 @@ import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.exception.InsufficientBalanceException;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import com.wallet.accountmanagementservice.core.port.impl.AccountPortRepository;
+import com.wallet.accountmanagementservice.core.service.AccountService;
 import com.wallet.accountmanagementservice.core.strategy.TransferStrategy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,13 +31,15 @@ class TransferStrategyTest {
     private AccountPortRepository accountPortRepository;
     @Mock
     private RabbitMqPort rabbitMqPort;
+    @Mock
+    private AccountService accountService;
 
     @Test
     void shouldCalculateTrasnferAndSendToRabbitMq() {
         var domain = getAccountDomain();
         var domain2 = getAccountDomain2();
-        when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER)).thenReturn(domain);
-        when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain2);
+        when(accountService.getAccountInformation(ACCOUNT_NUMBER)).thenReturn(domain);
+        when(accountService.getAccountInformation(ACCOUNT_NUMBER2)).thenReturn(domain2);
         doNothing().when(rabbitMqPort).send(any(), any(), any());
         ReflectionTestUtils.setField(transferStrategy, "propertiesConfiguration", getPropertiesTransactionConfiguration());
 
@@ -64,10 +67,14 @@ class TransferStrategyTest {
         var domain = getAccountDomain();
         var domain2 = getAccountDomain2();
         domain2.setBalance(BigDecimal.ZERO);
-        when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER)).thenReturn(domain);
-        when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain2);
+        when(accountService.getAccountInformation(ACCOUNT_NUMBER)).thenReturn(domain);
+        when(accountService.getAccountInformation(ACCOUNT_NUMBER2)).thenReturn(domain2);
 
         assertThrows(InsufficientBalanceException.class, () -> transferStrategy.process(transactionDomain));
     }
 
+    @Test
+    void shouldReturnDepositWhenGetType() {
+        assertEquals(TransactionType.TRANSFER, transferStrategy.getType());
+    }
 }

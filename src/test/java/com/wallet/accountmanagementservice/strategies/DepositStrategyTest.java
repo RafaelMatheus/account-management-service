@@ -5,6 +5,7 @@ import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import com.wallet.accountmanagementservice.core.port.impl.AccountPortRepository;
+import com.wallet.accountmanagementservice.core.service.AccountService;
 import com.wallet.accountmanagementservice.core.strategy.DepositStrategy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,11 +31,13 @@ class DepositStrategyTest {
     private AccountPortRepository accountPortRepository;
     @Mock
     private RabbitMqPort rabbitMqPort;
+    @Mock
+    private AccountService accountService;
 
     @Test
     void shouldCalculateDepositAndSendToRabbitMq() {
         var domain = getAccountDomain();
-        when(accountPortRepository.findByAccountNumber(any())).thenReturn(domain);
+        when(accountService.getAccountInformation(any())).thenReturn(domain);
         doNothing().when(rabbitMqPort).send(any(), any(), any());
         ReflectionTestUtils.setField(depositStrategy, "propertiesConfiguration", getPropertiesTransactionConfiguration());
 
@@ -54,4 +57,8 @@ class DepositStrategyTest {
                 () -> assertEquals(domain.getHolderTaxId(), valueFromCapture.getHolderTaxId()));
     }
 
+    @Test
+    void shouldReturnDepositWhenGetType() {
+        assertEquals(TransactionType.DEPOSIT, depositStrategy.getType());
+    }
 }

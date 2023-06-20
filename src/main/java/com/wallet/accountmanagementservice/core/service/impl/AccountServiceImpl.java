@@ -2,6 +2,7 @@ package com.wallet.accountmanagementservice.core.service.impl;
 
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
+import com.wallet.accountmanagementservice.core.exception.AccountNotFoundException;
 import com.wallet.accountmanagementservice.core.port.AccountPort;
 import com.wallet.accountmanagementservice.core.service.AccountService;
 import com.wallet.accountmanagementservice.core.strategy.TransactionFactory;
@@ -27,7 +28,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDomain getAccountInformation(String accountNumber) {
-        return port.findByAccountNumber(accountNumber);
+        return port.findByAccountNumber(accountNumber)
+                .orElseThrow(AccountNotFoundException::new);
     }
 
     @Override

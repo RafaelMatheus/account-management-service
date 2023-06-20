@@ -8,18 +8,24 @@ import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.exception.InsufficientBalanceException;
 import com.wallet.accountmanagementservice.core.port.AccountPort;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
+import com.wallet.accountmanagementservice.core.service.AccountService;
 
 import java.math.BigDecimal;
 
 public class TransferStrategy extends AbstractStrategy {
-    public TransferStrategy(AccountPort port, RabbitMqPort rabbitMqPort, PropertiesConfiguration propertiesConfiguration) {
+    private final AccountService accountService;
+
+    public TransferStrategy(AccountPort port, RabbitMqPort rabbitMqPort, PropertiesConfiguration propertiesConfiguration, AccountService accountService) {
         super(port, rabbitMqPort, propertiesConfiguration);
+        this.accountService = accountService;
     }
 
     @Override
     public AccountDomain process(TransactionDomain transactionDomain) {
-        var originAccount = port.findByAccountNumber(transactionDomain.originAccountNumber());
-        var destinationAccount = port.findByAccountNumber(transactionDomain.destinationAccountNumber());
+
+        var originAccount = accountService.getAccountInformation(transactionDomain.originAccountNumber());
+
+        var destinationAccount = accountService.getAccountInformation(transactionDomain.destinationAccountNumber());
 
         if (!hasSufficientBalance(originAccount, transactionDomain.value())) {
             throw new InsufficientBalanceException();

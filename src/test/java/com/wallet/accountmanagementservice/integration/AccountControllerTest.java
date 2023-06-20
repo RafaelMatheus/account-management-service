@@ -61,7 +61,7 @@ class AccountControllerTest {
                 .andReturn();
         var accountResponse = objectMapper.readValue(response.getResponse().getContentAsString(), AccountResponse.class);
 
-        var responseFromDatabase = portRepository.findByAccountNumber(accountResponse.getAccountNumber());
+        var responseFromDatabase = portRepository.findByAccountNumber(accountResponse.getAccountNumber()).get();
         var entityResponse = mongoTemplate.findAll(AccountEntity.class);
 
         assertAll(() -> assertNotNull(responseFromDatabase.getAccountNumber()),

@@ -37,11 +37,11 @@ public class ServiceBeanConfig {
     }
 
     @Bean
-    public Set<ProcessTransactionStrategy> strategies(AccountPort port, RabbitMqPort rabbitMqPort, PropertiesConfiguration propertiesConfiguration) {
-        var depositStrategy = new DepositStrategy(port, rabbitMqPort, propertiesConfiguration);
-        var withdrawStrategy = new WithdrawStrategy(port, rabbitMqPort, propertiesConfiguration);
-        var transferStrategy = new TransferStrategy(port, rabbitMqPort, propertiesConfiguration);
-        var paymentStrategy = new PaymentStrategy(port, rabbitMqPort, propertiesConfiguration);
-        return Set.of(depositStrategy, withdrawStrategy, transferStrategy, paymentStrategy);
+    public Set<Object> strategies(AccountPort port, RabbitMqPort rabbitMqPort, PropertiesConfiguration propertiesConfiguration, AccountService accountService) {
+        var depositStrategy = new DepositStrategy(port, rabbitMqPort, propertiesConfiguration, accountService);
+        var withdrawStrategy = new WithdrawStrategy(port, rabbitMqPort, propertiesConfiguration, accountService);
+        var transferStrategy = new TransferStrategy(port, rabbitMqPort, propertiesConfiguration, accountService);
+        var paymentStrategy = new PaymentStrategy(port, rabbitMqPort, propertiesConfiguration, accountService);
+        return Set.of(depositStrategy, withdrawStrategy, transferStrategy, paymentStrategy, accountService);
     }
 }
