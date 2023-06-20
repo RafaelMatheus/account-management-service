@@ -11,6 +11,8 @@ services:
       - RABBITMQ_USER=guest
       - RABBITMQ_PASS=guest
       - RABBITMQ_DEFAULT_VHOST=b2b
+    networks:
+      - wallet
 
   mongodb:
     image: mongo:3.6.1
@@ -23,6 +25,8 @@ services:
     ports:
       - 27017:27017
     command: mongod
+    networks:
+      - wallet
 
   account-management:
     image: account-management
@@ -35,6 +39,8 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+    networks:
+      - wallet
 
   transaction-management:
     image: transaction-management
@@ -48,6 +54,8 @@ services:
       - mongodb
       - rabbitmq
       - account-management
+    networks:
+      - wallet
 
   payment-management:
     image: payment-management
@@ -62,6 +70,8 @@ services:
       - rabbitmq
       - account-management
       - transaction-management
+    networks:
+      - wallet
 
   nginx:
     image: nginx:latest
@@ -73,7 +83,13 @@ services:
       - account-management
       - payment-management
       - transaction-management
+    networks:
+      - wallet
 
 volumes:
   MONGO_DATA:
   SQL_DATA:
+
+networks:
+  wallet:
+    driver: bridge
