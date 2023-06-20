@@ -6,7 +6,7 @@ import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import com.wallet.accountmanagementservice.core.port.impl.AccountPortRepository;
 import com.wallet.accountmanagementservice.core.service.AccountService;
-import com.wallet.accountmanagementservice.core.strategy.DepositStrategy;
+import com.wallet.accountmanagementservice.core.strategy.PaymentStrategy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -24,9 +24,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class DepositStrategyTest {
+class PaymentStrategyTest {
     @InjectMocks
-    private DepositStrategy depositStrategy;
+    private PaymentStrategy paymentStrategy;
     @Mock
     private AccountPortRepository accountPortRepository;
     @Mock
@@ -39,10 +39,10 @@ class DepositStrategyTest {
         var domain = getAccountDomain();
         when(accountService.getAccountInformation(any())).thenReturn(domain);
         doNothing().when(rabbitMqPort).send(any(), any(), any());
-        ReflectionTestUtils.setField(depositStrategy, "propertiesConfiguration", getPropertiesTransactionConfiguration());
+        ReflectionTestUtils.setField(paymentStrategy, "propertiesConfiguration", getPropertiesPaymentConfiguration());
 
-        var transactionDomain = new TransactionDomain(ACCOUNT_NUMBER, null, BigDecimal.TEN, TransactionType.DEPOSIT, null);
-        depositStrategy.process(transactionDomain);
+        var transactionDomain = new TransactionDomain(ACCOUNT_NUMBER, null, BigDecimal.TEN, TransactionType.PAYMENT, "xpto");
+        paymentStrategy.process(transactionDomain);
 
         ArgumentCaptor<AccountDomain> accountDomainArgumentCaptor = ArgumentCaptor.forClass(AccountDomain.class);
 
@@ -59,6 +59,6 @@ class DepositStrategyTest {
 
     @Test
     void shouldReturnDepositWhenGetType() {
-        assertEquals(TransactionType.DEPOSIT, depositStrategy.getType());
+        assertEquals(TransactionType.PAYMENT, paymentStrategy.getType());
     }
 }

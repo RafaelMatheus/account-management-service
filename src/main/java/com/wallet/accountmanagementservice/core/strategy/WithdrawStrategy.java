@@ -5,27 +5,30 @@ import com.wallet.accountmanagementservice.core.domain.AccountDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionRabbitMqDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
-import com.wallet.accountmanagementservice.core.exception.IinsufficientBalanceException;
+import com.wallet.accountmanagementservice.core.exception.InsufficientBalanceException;
 import com.wallet.accountmanagementservice.core.port.AccountPort;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
+import com.wallet.accountmanagementservice.core.service.AccountService;
 
 import java.math.BigDecimal;
 
 public class WithdrawStrategy extends AbstractStrategy {
+    private final AccountService accountService;
 
-    public WithdrawStrategy(AccountPort port, RabbitMqPort rabbitMqPort, PropertiesConfiguration propertiesConfiguration) {
+    public WithdrawStrategy(AccountPort port, RabbitMqPort rabbitMqPort, PropertiesConfiguration propertiesConfiguration, AccountService accountService) {
         super(port, rabbitMqPort, propertiesConfiguration);
+        this.accountService = accountService;
     }
 
     @Override
     public AccountDomain process(TransactionDomain transactionDomain) {
-        var account = port.findByAccountNumber(transactionDomain.originAccountNumber());
+        var account = accountService.getAccountInformation(transactionDomain.originAccountNumber());
 
         if (!hasSufficientBalance(account, transactionDomain.value())) {
-            throw new IinsufficientBalanceException();
+            throw new InsufficientBalanceException();
         }
 
-        account.setBalance(account.getBalance().min(transactionDomain.value()));
+        account.setBalance(account.getBalance().subtract(transactionDomain.value()));
 
         var toResponse = port.save(account);
         var message = toTransactionRabbitDomainWithdraw(account, transactionDomain.value());

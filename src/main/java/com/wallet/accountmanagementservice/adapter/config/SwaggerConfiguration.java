@@ -33,7 +33,8 @@ public class SwaggerConfiguration {
                 .globalOperationParameters(List.of(traceId))
                 .select()
                 .apis(RequestHandlerSelectors.basePackage(AccountController.class.getPackageName()))
-                .build();
+                .build()
+                .pathMapping("/");
     }
 
     private ApiInfo metaData() {
@@ -42,4 +43,5 @@ public class SwaggerConfiguration {
                 .description("REST API")
                 .build();
     }
+
 }

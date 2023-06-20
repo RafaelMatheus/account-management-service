@@ -1,17 +1,22 @@
 spring:
   data:
     mongodb:
-      uri: ${DB_URI:mongodb://localhost:27017}
+      uri: mongodb://localhost:27017
       database: account-management
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher
   rabbitmq:
-    host: ${RABBIT_HOST:localhost}
+    host: localhost
     port: 5672
     username: guest
     password: guest
     virtual-host: b2b
+
+  mongodb:
+    embedded:
+      version: 4.4.17
+
 server:
   port: 8080
 
@@ -31,3 +36,4 @@ payment:
     dead-letter-routing-key: payment-dead-letter-routing
     dead-letter-exchange: payment-dead-letter-exchange
     dead-letter-queue-name: payment-dead-letter-queue
+

@@ -3,9 +3,10 @@ package com.wallet.accountmanagementservice.strategies;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
 import com.wallet.accountmanagementservice.core.domain.TransactionDomain;
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
-import com.wallet.accountmanagementservice.core.exception.IinsufficientBalanceException;
+import com.wallet.accountmanagementservice.core.exception.InsufficientBalanceException;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
 import com.wallet.accountmanagementservice.core.port.impl.AccountPortRepository;
+import com.wallet.accountmanagementservice.core.service.AccountService;
 import com.wallet.accountmanagementservice.core.strategy.WithdrawStrategy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,20 +24,22 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class WithdrawStrategyTest {
+class WithdrawStrategyTest {
     @InjectMocks
     private WithdrawStrategy withdrawStrategy;
     @Mock
     private AccountPortRepository accountPortRepository;
     @Mock
     private RabbitMqPort rabbitMqPort;
+    @Mock
+    private AccountService accountService;
 
     @Test
     void shouldCalculateDepositAndSendToRabbitMq() {
         var domain = getAccountDomain2();
-        when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain);
+        when(accountService.getAccountInformation(ACCOUNT_NUMBER2)).thenReturn(domain);
         doNothing().when(rabbitMqPort).send(any(), any(), any());
-        ReflectionTestUtils.setField(withdrawStrategy, "propertiesConfiguration", getPropertiesConfiguration());
+        ReflectionTestUtils.setField(withdrawStrategy, "propertiesConfiguration", getPropertiesTransactionConfiguration());
         var transactionDomain = new TransactionDomain(null, ACCOUNT_NUMBER2, BigDecimal.TEN, TransactionType.WITHDRAW, null);
 
         withdrawStrategy.process(transactionDomain);
@@ -60,9 +63,9 @@ public class WithdrawStrategyTest {
 
         var domain = getAccountDomain2();
         domain.setBalance(BigDecimal.ZERO);
-        when(accountPortRepository.findByAccountNumber(ACCOUNT_NUMBER2)).thenReturn(domain);
+        when(accountService.getAccountInformation(ACCOUNT_NUMBER2)).thenReturn(domain);
 
-        assertThrows(IinsufficientBalanceException.class, () -> withdrawStrategy.process(transactionDomain));
+        assertThrows(InsufficientBalanceException.class, () -> withdrawStrategy.process(transactionDomain));
     }
 
 }

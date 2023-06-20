@@ -2,9 +2,10 @@ package com.wallet.accountmanagementservice.core.port.impl;
 
 import com.wallet.accountmanagementservice.adapter.repository.AccountRepository;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
-import com.wallet.accountmanagementservice.core.exception.AccountNotFoundException;
 import com.wallet.accountmanagementservice.core.helper.Mapper;
 import com.wallet.accountmanagementservice.core.port.AccountPort;
+
+import java.util.Optional;
 
 public class AccountPortRepository implements AccountPort {
     private final AccountRepository accountRepository;
@@ -20,9 +21,8 @@ public class AccountPortRepository implements AccountPort {
     }
 
     @Override
-    public AccountDomain findByAccountNumber(String accountNumber) {
+    public Optional<AccountDomain> findByAccountNumber(String accountNumber) {
         return accountRepository.findByAccountNumber(accountNumber)
-                .map(Mapper::toDomain)
-                .orElseThrow(AccountNotFoundException::new);
+                .map(Mapper::toDomain);
     }
 }

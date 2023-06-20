@@ -1,5 +1,5 @@
 FROM eclipse-temurin:17.0.3_7-jdk-alpine
 WORKDIR /app
-COPY target/*.jar app.jar
+COPY ../target/*.jar app.jar
 EXPOSE 8080
 CMD ["java", "-jar", "app.jar"]

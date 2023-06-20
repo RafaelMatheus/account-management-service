@@ -7,18 +7,21 @@ import com.wallet.accountmanagementservice.core.domain.TransactionRabbitMqDomain
 import com.wallet.accountmanagementservice.core.enumerated.TransactionType;
 import com.wallet.accountmanagementservice.core.port.AccountPort;
 import com.wallet.accountmanagementservice.core.port.RabbitMqPort;
+import com.wallet.accountmanagementservice.core.service.AccountService;
 
 import java.math.BigDecimal;
 
 public class DepositStrategy extends AbstractStrategy {
+    private final AccountService accountService;
 
-    public DepositStrategy(AccountPort port, RabbitMqPort rabbitMqPort, PropertiesConfiguration propertiesConfiguration) {
+    public DepositStrategy(AccountPort port, RabbitMqPort rabbitMqPort, PropertiesConfiguration propertiesConfiguration, AccountService accountService) {
         super(port, rabbitMqPort, propertiesConfiguration);
+        this.accountService = accountService;
     }
 
     @Override
     public AccountDomain process(TransactionDomain transactionDomain) {
-        var account = port.findByAccountNumber(transactionDomain.originAccountNumber());
+        var account = accountService.getAccountInformation(transactionDomain.originAccountNumber());
 
         account.setBalance(account.getBalance().add(transactionDomain.value()));
         var message = toTransactionRabbitDomainDeposit(account, transactionDomain.value());

@@ -2,7 +2,6 @@ package com.wallet.accountmanagementservice.base;
 
 import com.wallet.accountmanagementservice.adapter.config.PropertiesConfiguration;
 import com.wallet.accountmanagementservice.adapter.dtos.request.AccountRequest;
-import com.wallet.accountmanagementservice.adapter.dtos.response.AccountResponse;
 import com.wallet.accountmanagementservice.adapter.entity.AccountEntity;
 import com.wallet.accountmanagementservice.core.domain.AccountDomain;
 
@@ -22,7 +21,7 @@ public class BaseTestFactory {
     public static final String ACCOUNT_NUMBER2 = "112311223321";
 
     public static AccountEntity getAccountEntity() {
-        return new AccountEntity(ID, TAX_ID, HOLDER_NAME, PHONE_NUMBER, BALANCE, ACCOUNT_NUMBER, null, null);
+        return new AccountEntity(ID, TAX_ID, HOLDER_NAME, PHONE_NUMBER, BALANCE, ACCOUNT_NUMBER, null);
 
     }
 
@@ -38,11 +37,19 @@ public class BaseTestFactory {
         return new AccountRequest(TAX_ID, HOLDER_NAME, PHONE_NUMBER);
     }
 
-    public static PropertiesConfiguration getPropertiesConfiguration() {
+    public static PropertiesConfiguration getPropertiesTransactionConfiguration() {
         var properties = new PropertiesConfiguration();
         var transaction = new PropertiesConfiguration.TransactionTypeConfig();
         transaction.setRabbit(new PropertiesConfiguration.RabbitConfig());
         properties.setTransaction(transaction);
+        return properties;
+    }
+
+    public static PropertiesConfiguration getPropertiesPaymentConfiguration() {
+        var properties = new PropertiesConfiguration();
+        var transaction = new PropertiesConfiguration.TransactionTypeConfig();
+        transaction.setRabbit(new PropertiesConfiguration.RabbitConfig());
+        properties.setPayment(transaction);
         return properties;
     }
 }
