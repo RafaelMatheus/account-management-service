@@ -16,7 +16,7 @@ O serviço Account Management é projetado como um microserviço independente e 
 
 O Account Management Service se integra com os seguintes serviços:
 
-- [Transaction Service](https://github.com/RafaelMatheus/payment-management-service): responsável histórico transações financeiras.
+- [Transaction Service](https://github.com/RafaelMatheus/transaction-management-service): responsável histórico transações financeiras.
 - [Payment Service](https://github.com/RafaelMatheus/payment-management-service): responsável pelo processamento de pagamentos e recebimentos.
 
 ## Requisitos do Sistema
@@ -41,7 +41,7 @@ Antes de iniciar o ambiente com o `docker-compose`, é necessário construir a i
 ```bash
 docker build -t account-management .
 ````
-Observação: Certifique-se de ter construido as imagens das dependências antes de executar o docker-compose, as descrições encontram-se em seus respectivos readme.md.
+Observação: Certifique-se de ter construido as imagens das dependências antes de executar o docker-compose, [Transaction Service](https://github.com/RafaelMatheus/transaction-management-service) e [Payment Service](https://github.com/RafaelMatheus/payment-management-service).
 
 ```bash
 docker-compose up -d
@@ -54,8 +54,8 @@ O Account Management Service possui uma documentação do Swagger que descreve o
 
 Para acessar a documentação do Swagger, siga as etapas abaixo:
 
-1. Inicie o serviço Account Management.
-2. Abra o navegador e vá para a URL: [http://localhost/swagger-ui.html](http://localhost/account/swagger-ui.html).
+1. Verifique se o docker-compose foi corretamente executado.
+2. Abra o navegador e vá para a URL: [http://localhost/account/swagger-ui.html](http://localhost/account/swagger-ui.html).
 
 Isso abrirá a interface do Swagger, onde você poderá explorar os endpoints, enviar solicitações e visualizar as respostas.
 
@@ -80,7 +80,7 @@ Antes de qualquer coisa é necessário criar uma nova conta, você utilizará at
 - Consultar informações da conta (guarde o número da conta criado anteriormente):
 
   ```bash
-  curl -X GET "http://localhost/account/api/accounts/{numeroDaContaRespondidoNaSolucitacaoAnterior}" -H "accept: */*"
+  curl -X GET "http://localhost/account/api/accounts?accountNumber={numeroDaContaRespondidoNaSolucitacaoAnterior}" -H "accept: */*"
   ```
 - Realizar deposito:
   ```bash
