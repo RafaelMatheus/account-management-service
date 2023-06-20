@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -46,22 +45,20 @@ public class CustomExceptionResolver extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected CustomErrorResponse accountNotFoundException(AccountNotFoundException ex, ServletWebRequest request) {
+    protected ResponseEntity<CustomErrorResponse> accountNotFoundException(AccountNotFoundException ex, ServletWebRequest request) {
         log.error("m=accountNotFoundException", ex);
         var path = request.getRequest().getServletPath();
 
-        return new CustomErrorResponse(path, ex.getMessage(), HttpStatus.BAD_REQUEST, null);
+        return ResponseEntity.badRequest().body(new CustomErrorResponse(path, ex.getMessage(), HttpStatus.BAD_REQUEST, null));
     }
 
     @ExceptionHandler(InsufficientBalanceException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected CustomErrorResponse insufficientBalanceException(InsufficientBalanceException ex, ServletWebRequest request) {
+    protected ResponseEntity<CustomErrorResponse> insufficientBalanceException(InsufficientBalanceException ex, ServletWebRequest request) {
         log.error("m=insufficientBalanceException", ex);
 
         var path = request.getRequest().getServletPath();
 
-        return new CustomErrorResponse(path, ex.getMessage(), HttpStatus.BAD_REQUEST, null);
+        return ResponseEntity.badRequest().body(new CustomErrorResponse(path, ex.getMessage(), HttpStatus.BAD_REQUEST, null));
     }
 }
 
